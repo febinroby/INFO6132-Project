@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { COLORS } from '../../constants';
 import { AuthContext } from '../context/AuthContext';
@@ -12,6 +12,24 @@ const ProfileScreen = ({ navigation }) => {
     const [profilePhoto, setProfilePhoto] = useState(user?.user_metadata?.profilePhoto || null);
     const [uploading, setUploading] = useState(false);
 
+    useEffect(() => {
+        const loadProfilePhoto = async () => {
+            if (user?.id) {
+                const fileName = `photos/${user.id}.jpg`; 
+                const { data, error } = await supabase.storage
+                    .from('profilephoto')  
+                    .getPublicUrl(fileName);
+    
+                if (error) {
+                    console.error('Error fetching image:', error.message);
+                    return;
+                }
+    
+                setProfilePhoto(data?.publicUrl);
+            }
+        } 
+        loadProfilePhoto()
+    },[]);
     const handleUpdateProfile = async () => {
         try {
             const { error } = await supabase.auth.updateUser({
