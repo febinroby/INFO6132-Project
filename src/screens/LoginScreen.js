@@ -42,6 +42,7 @@ const LoginScreen = ({ navigation }) => {
                 onChangeText={setEmail}
                 style={styles.input}
                 placeholderTextColor={COLORS.placeholder}
+                autoCapitalize='none'
             />
             <TextInput
                 placeholder="Password"
@@ -50,6 +51,7 @@ const LoginScreen = ({ navigation }) => {
                 secureTextEntry
                 style={styles.input}
                 placeholderTextColor={COLORS.placeholder}
+                autoCapitalize='none'
             />
 
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
