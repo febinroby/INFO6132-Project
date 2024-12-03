@@ -25,6 +25,7 @@ const AuthProvider = ({ children }) => {
             setUser(session?.user || null);
         });
 
+        // Correct cleanup for the listener
         return () => {
             authSubscription.subscription.unsubscribe();
         };
