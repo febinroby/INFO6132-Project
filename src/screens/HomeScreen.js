@@ -3,20 +3,20 @@ import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity }
 import { AuthContext } from '../context/AuthContext';
 import { COLORS } from '../../constants';
 import { supabase } from '../services/supabaseClient';
-import { deleteExpense } from '../services/expenseService'; // Import the deleteExpense function
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { deleteExpense } from '../services/expenseService'; 
+import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import { useNavigation } from '@react-navigation/native'; 
 
 const HomeScreen = () => {
     const { user } = useContext(AuthContext);
-    const navigation = useNavigation(); // Initialize navigation
+    const navigation = useNavigation();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('All'); // Filter state
+    const [filter, setFilter] = useState('All'); 
 
     const loadExpenses = async () => {
         try {
-            setLoading(true);  // Set loading to true when fetching data
+            setLoading(true); 
             const { data, error } = await supabase
                 .from('expenses')
                 .select('*')
@@ -28,7 +28,7 @@ const HomeScreen = () => {
         } catch (error) {
             console.error('Error fetching expenses:', error);
         } finally {
-            setLoading(false);  // Set loading to false after data is fetched
+            setLoading(false);  
         }
     };
 
@@ -79,15 +79,14 @@ const HomeScreen = () => {
     const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
     const handleDeleteExpense = async (id) => {
-        await deleteExpense(id); // Call the delete function from expenseService
-        loadExpenses(); // Reload expenses after deletion
+        await deleteExpense(id);
+        loadExpenses(); 
     };
 
     const handleEditExpense = (expense) => {
-        navigation.navigate('Edit Expense', { expense }); // Pass the expense to EditExpenseScreen
+        navigation.navigate('Edit Expense', { expense }); 
     };
 
-    // Filter logic
     const getFilteredExpenses = () => {
       const now = new Date();
   
@@ -95,12 +94,10 @@ const HomeScreen = () => {
           const expenseDate = new Date(expense.created_at);
   
           if (filter === 'Weekly') {
-              // Get the start of the current week (Sunday)
               const startOfWeek = new Date(now);
               startOfWeek.setDate(now.getDate() - now.getDay());
               startOfWeek.setHours(0, 0, 0, 0);
   
-              // Get the end of the current week (Saturday)
               const endOfWeek = new Date(startOfWeek);
               endOfWeek.setDate(startOfWeek.getDate() + 6);
               endOfWeek.setHours(23, 59, 59, 999);
@@ -109,18 +106,16 @@ const HomeScreen = () => {
           }
   
           if (filter === 'Monthly') {
-              // Get the start of the current month
               const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
               startOfMonth.setHours(0, 0, 0, 0);
   
-              // Get the end of the current month
               const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
               endOfMonth.setHours(23, 59, 59, 999);
   
               return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
           }
   
-          return true; // 'All' filter
+          return true; 
       });
   };
   
